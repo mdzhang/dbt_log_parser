@@ -1,4 +1,3 @@
-import pdb
 import json
 import logging
 import re
@@ -6,15 +5,15 @@ import re
 from dbt_log_parser.machine import States, get_machine
 
 
-class LoggingMixin:
+class LoggingMixin(type):
+    def __init__(cls, *args):
+        super().__init__(*args)
+
+        cls.log = logging.getLogger(f"{__name__}.{cls.__name__}")
+
+
+class DbtLogParser(metaclass=LoggingMixin):
     def __init__(self):
-        self.log = logging.getLogger(f"dbt_log_parser.{__name__}")
-
-
-class DbtLogParser(LoggingMixin):
-    def __init__(self):
-        super().__init__()
-
         self._machine = get_machine(model=self)
         self.found_start = False
         self.found_start_summary = False
@@ -61,7 +60,7 @@ class DbtLogParser(LoggingMixin):
             msg = (
                 "The first line searched when found_start_summary "
                 + "is false should be the summary line!"
-                + +" But got:\n"
+                + " But got:\n"
                 + line
                 + "\ninstead."
             )

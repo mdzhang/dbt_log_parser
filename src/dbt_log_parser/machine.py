@@ -41,13 +41,13 @@ def get_machine(model):
     m.add_ordered_transitions(
         trigger="process_next_line",
         conditions=[
-            lambda *args, **kwargs: True,
             "found_start",
             "found_start_summary",
             "found_finish",
             "found_done",
+            lambda *args, **kwargs: True,
         ],
-        prepare=[None, "seek_start", "seek_summary", "seek_finish", "seek_done"],
+        prepare=["seek_start", "seek_summary", "seek_finish", "seek_done", None],
     )
 
     return m
