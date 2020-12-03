@@ -18,9 +18,28 @@ See the [`main` function here](./src/dbt_log_parser/__init__.py).
 
 The `DbtLogParser` heavily uses, or expects to be used by, the state machine class from [`pytransitions`](https://github.com/pytransitions/transitions), so reading the Quick Start on that package is advised.
 
+## Setup
+
+### Requirements
+
+- [HomeBrew](https://brew.sh/)
+- [asdf](https://asdf-vm.com/#/core-manage-asdf-vm): `brew install asdf`
+  - `asdf` Python plugin: `asdf plugin-add python`
+
+### Steps
+
+- install Python runtime: `asdf install && asdf reshim`
+- install Python dependency manager [pipenv](https://pipenv.readthedocs.io/en/latest/): `pip install pipenv`
+- create a Pipenv environment specific to this project, and install Python packages, including developer packages: `pipenv install --dev`
+
 ## Testing
 
-TODO
+Uses `pytest`.
+
+```sh
+$ pipenv shell
+$ pytest tests
+```
 
 ## Releasing
 
@@ -32,8 +51,12 @@ TODO
 
 ## Hygiene
 
-Using the [`black`](https://github.com/psf/black) code formatter is advised.
+Abide by the `pre-commit` hook:
+
+```sh
+$ pre-commit install
+```
 
 ## Reporting Bugs
 
-TODO
+Create a [GitHub issue](https://github.com/mdzhang/dbt_log_parser/issues) and use the Bug Report template.
