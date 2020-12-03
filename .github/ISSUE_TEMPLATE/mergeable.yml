@@ -1,0 +1,41 @@
+---
+version: 2
+mergeable:
+  - when: pull_request.*, pull_request_review.*
+    validate:
+      # if Pipfile is updated, so should  Pipfile.lock
+      - do: dependent
+        changed:
+          file: 'Pipfile'
+          files: ['Pipfile.lock']
+
+      # enforce naming convention
+      - do: title
+        must_include:
+          regex: ^(feature|docs|bugfix)(\(\w+\))?:.+$
+          message: release naming conventions must be followed
+
+      # if the PR is a new feature or a fix, it must be logged in the changelog
+      - do: or
+        validate:
+          - do: and
+            validate:
+              - do: title
+                must_include:
+                  regex: ^(feature|bugfix)(\(\w+\))?:.+$
+              - do: changeset
+                must_include:
+                  regex: 'CHANGELOG.md'
+                  message: 'new features or fixes needed to be logged to the changelog'
+          - do: title
+            must_exclude:
+              regex: ^(feat|fix)(\(\w+\))?:.+$
+              message: 'new features or fixes needed to be logged to the changelog'
+
+      # required approvals
+      - do: approvals
+        min:
+          count: 1
+        or:
+          - required:
+              reviewers: [ mdzhang ]
