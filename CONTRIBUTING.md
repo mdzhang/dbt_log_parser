@@ -24,7 +24,9 @@ TODO
 
 ## Releasing
 
-TODO
+- update CHANGELOG.md
+- add git tag e.g. `git tag -a v0.1.0a0 -m "Initial release"`
+- push tags `git push origin --tags`
 
 ## Hygiene
 
