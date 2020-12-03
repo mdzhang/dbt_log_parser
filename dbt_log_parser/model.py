@@ -21,8 +21,6 @@ class DbtLogParser(LoggingMixin):
         self.last_error_detail = {}
         self.has_incomplete_error_detail = False
 
-        # TODO: reader
-
     def seek_start(self, line: str, line_no: int):
         m = re.search("Running with dbt", line)
         if m is not None:
@@ -147,7 +145,7 @@ class DbtLogParser(LoggingMixin):
                 self.all_test_metadata[self.last_error_detail["name"]].update(
                     self.last_error_detail
                 )
-                last_error_detail = {}
+                self.last_error_detail = {}
                 self.has_incomplete_error_detail = False
                 return
 
@@ -157,7 +155,7 @@ class DbtLogParser(LoggingMixin):
 
             if m is not None:
                 self.has_incomplete_error_detail = True
-                last_error_detail["name"] = m.group(2)
+                self.last_error_detail["name"] = m.group(2)
                 return
 
             m = re.search(
@@ -170,7 +168,7 @@ class DbtLogParser(LoggingMixin):
                 self.metadata["total_skipped"] = m.group(4)
                 self.found_done = True
 
-    def report(self):
+    def report(self, outfile: str = "out.json"):
         self.metadata["tests"] = list(self.all_test_metadata.values())
-        with open("out.json", "w") as f:
+        with open(outfile, "w") as f:
             json.dump(self.metadata, f)

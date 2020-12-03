@@ -40,36 +40,12 @@ def get_machine(model=None):
             State(name=State.SEEK_DONE),
             State(name=State.DONE),
         ],
-        transitions=[
-            Transition(
-                trigger="start_seek_summary",
-                source=States.SEEK_START,
-                dest=States.SEEK_START_SUMMARY,
-                conditions=["found_start"],
-                before="read_next_line",
-            ),
-            Transition(
-                trigger="start_seek_finish",
-                source=States.SEEK_START_SUMMARY,
-                dest=States.SEEK_FINISH,
-                conditions=["found_summary"],
-                before="read_next_line",
-            ),
-            Transition(
-                trigger="seek_done",
-                source=States.SEEK_FINISH,
-                dest=States.SEEK_DONE,
-                conditions=["found_finish"],
-                before="read_next_line",
-            ),
-            Transition(
-                trigger="is_done",
-                source=States.SEEK_DONE,
-                dest=States.DONE,
-                before="report",
-            ),
-        ],
         initial=States.SEEK_START,
+    )
+
+    m.add_ordered_transitions(
+        trigger="process_next_line",
+        conditions=["found_start", "found_summary", "found_finish", "found_done"],
     )
 
     return m
