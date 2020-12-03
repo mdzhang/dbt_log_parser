@@ -1,3 +1,4 @@
+import copy
 import json
 import logging
 import re
@@ -171,10 +172,21 @@ class DbtLogParser(metaclass=LoggingMixin):
                 self.metadata["total_skipped"] = m.group(4)
                 self.found_done = True
 
-    def report(self, outfile: str = "out.json"):
+    @property
+    def report(self):
+        if hasattr(self, "_report"):
+            return self._report
+
+        report = copy.deepcopy(self.metadata)
+        report["tests"] = list(self.all_test_metadata.values())
+        self._report = report
+
+        return self._report
+
+    def write_report(self, outfile: str = "out.json"):
         self.metadata["tests"] = list(self.all_test_metadata.values())
         with open(outfile, "w") as f:
-            json.dump(self.metadata, f)
+            json.dump(self.report, f)
         self.log.info(f"Wrote results to {outfile}.")
 
     @property

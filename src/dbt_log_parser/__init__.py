@@ -6,7 +6,9 @@ from dbt_log_parser.parser import DbtLogParser
 logging.basicConfig(level=logging.DEBUG)
 
 
-def parse(log_filepath: str = "dbt.log", outfile: str = "out.json"):
+def parse(
+    log_filepath: str = "dbt.log", outfile: str = "out.json", write_report: bool = True
+):
     with open(log_filepath, "r") as f:
         log_lines = f.readlines()
 
@@ -18,7 +20,10 @@ def parse(log_filepath: str = "dbt.log", outfile: str = "out.json"):
 
         parser.process_next_line(line=line, line_no=line_no)
 
-    parser.report(outfile)
+    if write_report:
+        parser.write_report(outfile)
+
+    return parser.report
 
 
 def get_parser():
