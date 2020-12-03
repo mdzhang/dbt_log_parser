@@ -2,6 +2,13 @@
 
 Python package and CLI tool for parsing structured (JSON) data from a dbt log.
 
+## Table of Contents
+
+* [Generated Report](#generated-report)
+* [Usage](#usage)
+  + [CLI](#cli)
+  + [API](#api)
+
 ## Generated Report
 
 Example report structure:
