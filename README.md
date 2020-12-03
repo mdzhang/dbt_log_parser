@@ -1,5 +1,8 @@
 # dbt log parser
 
+[![Version](https://img.shields.io/pypi/v/dbt_log_parser.svg)](https://pypi.org/project/dbt_log_parser)
+[![License](https://img.shields.io/github/license/mdzhang/dbt_log_parser.svg)](LICENSE)
+
 Python package and CLI tool for parsing structured (JSON) data from a dbt log.
 
 ## Table of Contents

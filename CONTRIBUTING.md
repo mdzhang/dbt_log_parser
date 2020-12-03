@@ -24,10 +24,11 @@ TODO
 
 ## Releasing
 
-- update CHANGELOG.md
+- update `CHANGELOG.md`
+- commit using the title e.g. "[release] v0.1.0a0: Initial release"
 - ensure you have the [GitHub CLI](https://github.com/cli/cli) installed
 - ensure `$PYPI_USER` and `$PYPI_PASSWORD` environment variables are set
-- run `bin/release`
+- run `bin/release` e.g. `./bin/release -v v0.1.0a0 -m "Initial release"`
 
 ## Hygiene
 

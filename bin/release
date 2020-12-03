@@ -14,7 +14,7 @@ usage()
     -m,               Short message to describe version
     -t,               Whether to release to test server
 
-    Release package to PyPi and GitHub
+    Tag current commit with given version and build and release package to PyPi and GitHub
     "
 }
 
