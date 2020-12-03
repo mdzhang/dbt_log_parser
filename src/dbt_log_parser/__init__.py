@@ -1,5 +1,7 @@
 import argparse
 import logging
+import os
+import typing as T
 
 from dbt_log_parser.parser import DbtLogParser
 
@@ -8,7 +10,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 def parse(
     log_filepath: str = "dbt.log", outfile: str = "out.json", write_report: bool = True
-):
+) -> T.Dict:
+    """Parse the dbt log at the given path and generate a report.
+
+    :param log_filepath: Where dbt log exists on disk
+    :param outfile: Where to write JSON report to
+    :param write_report: Whether to write JSON report to disk at all
+    :return: Report as dict
+    """
     with open(log_filepath, "r") as f:
         log_lines = f.readlines()
 
@@ -18,6 +27,7 @@ def parse(
         if parser.is_done:
             break
 
+        # this method is added to the parser by the state machine
         parser.process_next_line(line=line, line_no=line_no)
 
     if write_report:
@@ -47,6 +57,7 @@ def get_parser():
 
 
 def main():
+    """Main CLI entrypoint."""
     parser = get_parser()
     args = parser.parse_args()
 

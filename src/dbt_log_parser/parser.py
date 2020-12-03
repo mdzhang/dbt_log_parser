@@ -2,11 +2,14 @@ import copy
 import json
 import logging
 import re
+import typing as T
 
 from dbt_log_parser.machine import States, get_machine
 
 
 class LoggingMixin(type):
+    """Adds logger that automatically prefixes log lines with module and class name."""
+
     def __init__(cls, *args):
         super().__init__(*args)
 
@@ -15,6 +18,28 @@ class LoggingMixin(type):
 
 class DbtLogParser(metaclass=LoggingMixin):
     def __init__(self):
+        """Contains core dbt log parsing logic.
+
+        :param _machine: State machine that will determine which
+            instance method to invoke.
+        :param found_start: We found the dbt log start line. In case
+            the log is wrapped in another service e.g. k8s, Airflow, additional
+            non-dbt log lines may appear in the log we want to avoid.
+        :param found_start_summary: We found the dbt summary line that describes
+            what models, tests, etc. were parsed from the dbt project.
+        :param found_finish: dbt finished logging whether tests PASSed, FAILed,
+            or WARNed.
+        :param found_done: dbt printed its done line. This happens after a finish
+            line is logged and after warning and error detail lines are logged.
+        :param metadata: Metadata parsed from logs to use to generate report.
+        :param all_test_metadata: Test warning/failure details are contained
+            here. Keys are test names and values are dicts containing
+            test details. See report schema for more.
+        :param last_error_detail: Some error details are spread across multiple
+            lines. This dict tracks the latest warning/error detail.
+        :param has_incomplete_error_detail: True iff we've started parsing
+            warning or error details but have not yet finished.
+        """
         self._machine = get_machine(model=self)
         self.found_start = False
         self.found_start_summary = False
@@ -26,6 +51,7 @@ class DbtLogParser(metaclass=LoggingMixin):
         self.has_incomplete_error_detail = False
 
     def seek_start(self, line: str, line_no: int):
+        """See if the log line is a dbt start line."""
         m = re.search("Running with dbt", line)
         if m is not None:
             self.log.info(f"Found starting dbt log line at line {line_no}")
@@ -34,6 +60,12 @@ class DbtLogParser(metaclass=LoggingMixin):
             self.log.debug(f"Tossing pre-start line: {line}")
 
     def seek_summary(self, line: str, line_no: int):
+        """See if the log line is a dbt summary line.
+
+        This should normally occur immediately after a dbt start line is found.
+        """
+        m = re.search("Running with dbt", line)
+
         m = re.search(
             r"Found (\d+) models, (\d+) tests, (\d+) snapshots, (\d+) analyses, "
             + r"(\d+) macros, (\d+) operations, (\d+) seed files, (\d+) sources",
@@ -68,6 +100,12 @@ class DbtLogParser(metaclass=LoggingMixin):
             raise Exception(msg)
 
     def seek_finish(self, line: str, line_no: int):
+        """See if the log line is a dbt finish line.
+
+        Between a start summary and finish line, we may see test START, PASS,
+        WARN, or FAIL lines; note those if they occur and add them to
+        self.all_test_metadata.
+        """
         m = re.search(
             r"\d{2}:\d{2}:\d{2} \| (\d+) of \d+ START test (\w+)(\.)* \[RUN\]", line
         )
@@ -103,7 +141,7 @@ class DbtLogParser(metaclass=LoggingMixin):
             test_metadata["number"] = int(m.group(3))
             test_metadata["name"] = m.group(4)
 
-            # same comment as above for DBT_LOG_TEST_PASS_PATTERN
+            # same comment as above when parsing total_time
             m2 = re.search(r" in (\d+\.\d+)s\]", line[line.index(m.group(0)) :])
             test_metadata["total_time"] = float(m2.group(1))
 
@@ -121,6 +159,12 @@ class DbtLogParser(metaclass=LoggingMixin):
         self.log.debug(f"Tossing unrecognized pre-finish line: {line}")
 
     def seek_done(self, line: str, line_no: int):
+        """See if the log line is a dbt done line.
+
+        Between a dbt finish and done line, we may see multiline error/warning
+        details, so take note of those and merge into their existing entry
+        in self.all_test_metadata.
+        """
         if self.has_incomplete_error_detail:
             m = re.search(r"Got (\d+) results?, expected (\d+)", line)
             if m is not None:
@@ -173,7 +217,8 @@ class DbtLogParser(metaclass=LoggingMixin):
                 self.found_done = True
 
     @property
-    def report(self):
+    def report(self) -> T.Dict:
+        """Return a JSON report by merging metadata."""
         if hasattr(self, "_report"):
             return self._report
 
@@ -184,6 +229,7 @@ class DbtLogParser(metaclass=LoggingMixin):
         return self._report
 
     def write_report(self, outfile: str = "out.json"):
+        """Write report as JSON to a file on disk."""
         self.metadata["tests"] = list(self.all_test_metadata.values())
         with open(outfile, "w") as f:
             json.dump(self.report, f)
@@ -191,6 +237,7 @@ class DbtLogParser(metaclass=LoggingMixin):
 
     @property
     def is_done(self):
+        """Return true if we have encountered the end of a dbt log."""
         if hasattr(self, "state"):
             return self.state == States.DONE
         return False
