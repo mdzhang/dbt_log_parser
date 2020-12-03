@@ -1,0 +1,110 @@
+#!/bin/bash
+
+set -o errexit
+
+command -v gh >/dev/null 2>&1 || die "gh is required but not installed. Aborting. See https://github.com/cli/cli"
+
+usage()
+{
+    echo " Usage: ${0}
+
+    -v,               Version. Should follow pattern v{major}.{minor}.{patch}
+                        Alpha versions should end with e.g. a0, a1, a2, etc.
+                        Beta versions should end with e.g. b0, b1, b2, etc.
+    -m,               Short message to describe version
+    -t,               Whether to release to test server
+
+    Release package to PyPi and GitHub
+    "
+}
+
+testrelease=1
+
+while getopts "v:m:t:h" opt; do
+    case $opt in
+        h) usage && exit 1
+        ;;
+        v) version=$OPTARG
+        ;;
+        m) message=$OPTARG
+        ;;
+        t) testrelease=$OPTARG
+        ;;
+        \?) echo "Invalid option -$OPTARG" >&2
+        ;;
+    esac
+done
+
+if [[ $(git diff --stat) != '' ]]; then
+  echo "Git branch is dirty. Can't release"
+  exit 1
+fi
+
+if [ "${PYPI_USER}x" == "x" ]; then
+  echo "PYPI_USER env var must be set"
+  exit 1
+fi
+
+if [ "${PYPI_PASSWORD}x" == "x" ]; then
+  echo "PYPI_PASSWORD env var must be set"
+  exit 1
+fi
+
+######################################################################
+# Git tag
+######################################################################
+
+latesttag=$(git describe --tags --abbrev=0)
+
+if [ ! "$latesttag" == "$version" ]; then
+  # tag current commit
+  git tag -a "$version" -m "$message"
+
+  # push tag to remote
+  git push origin --tags
+else
+  echo "Git tag already existed. Not adding tag again."
+fi
+
+######################################################################
+# Python package release
+######################################################################
+
+if [ $testrelease -eq 1 ] ; then
+  pypi="testpypi"
+else
+  pypi="pypi"
+fi
+
+pypiversion=$(echo "$version" | cut -c 2-)
+alreadypypireleased=$(pip install dbt_log_parser== 2>&1 | grep -c "$pypiversion")
+
+if [ $alreadypypireleased -eq 1 ]; then
+  echo "PyPi release already existed. Not recreating."
+else
+  rm -rf dist/
+  python3 setup.py sdist bdist_wheel
+  pip install twine
+  python3 -m twine upload --repository "$pypi" dist/* -u "${PYPI_USER}" -p "${PYPI_PASSWORD}"
+fi
+
+######################################################################
+# GitHub release
+######################################################################
+
+alreadygitreleased=$(gh release list | grep -c "$version")
+
+if [ $alreadygitreleased -eq 1 ]; then
+  echo "Github release already existed. Not recreating."
+else
+  # split per-version docs into separate files named changes*
+  csplit --prefix changes CHANGELOG.md "/^##.*/" '{*}'
+
+  # find the current version's notes
+  releasenotesfile=$(find . -type f -iname "changes*" | xargs fgrep -l "$version" | head -1)
+
+  gh release create "$version" -F "$releasenotesfile"
+
+  # cleanup split files
+  rm -f "changes*"
+fi

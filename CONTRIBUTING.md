@@ -25,8 +25,9 @@ TODO
 ## Releasing
 
 - update CHANGELOG.md
-- add git tag e.g. `git tag -a v0.1.0a0 -m "Initial release"`
-- push tags `git push origin --tags`
+- ensure you have the [GitHub CLI](https://github.com/cli/cli) installed
+- ensure `$PYPI_USER` and `$PYPI_PASSWORD` environment variables are set
+- run `bin/release`
 
 ## Hygiene
 

@@ -2,6 +2,6 @@
 
 ## Unreleased
 
-## 0.1.0a0
+## v0.1.0a0
 
 * Initial release
