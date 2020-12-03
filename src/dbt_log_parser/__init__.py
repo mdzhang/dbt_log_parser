@@ -1,7 +1,6 @@
 import logging
 
-from dbt_log_parser.model import DbtLogParser
-
+from dbt_log_parser.parser import DbtLogParser
 
 logging.basicConfig(level=logging.DEBUG)
 
