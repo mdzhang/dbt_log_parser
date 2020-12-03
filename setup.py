@@ -17,10 +17,8 @@ def get_long_description() -> str:
 
 setup(
     name="dbt_log_parser",
-    use_scm_version={
-        "write_to": "src/_dbt_log_parser_version.py",
-        "write_to_template": 'version = "{version}"\n',
-    },
+    use_scm_version=True,
+    setup_requires=["setuptools_scm"],
     description="Parse structured metadata from dbt logs",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
@@ -34,7 +32,6 @@ setup(
         )
     },
     license="MIT",
-    py_modules=["_dbt_log_parser_version"],
     packages=["dbt_log_parser"],
     package_dir={"": "src"},
     python_requires=">=3.6",
