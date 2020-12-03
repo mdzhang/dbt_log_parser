@@ -1,5 +1,9 @@
-from dbt_log_parser.machine import States, get_machine
+import logging
+
 from dbt_log_parser.model import DbtLogParser
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main(log_filepath: str = "dbt.log"):
@@ -7,13 +11,12 @@ def main(log_filepath: str = "dbt.log"):
         log_lines = f.readlines()
 
     parser = DbtLogParser()
-    m = get_machine(model=parser)
 
     for line_no, line in enumerate(log_lines):
-        if m.state == States.DONE:
+        if parser.is_done:
             break
 
-        m.process_next_line(line=line, line_no=line_no)
+        parser.process_next_line(line=line, line_no=line_no)
 
     parser.report()
 

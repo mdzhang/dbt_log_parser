@@ -1,6 +1,9 @@
+import pdb
 import json
 import logging
 import re
+
+from dbt_log_parser.machine import States, get_machine
 
 
 class LoggingMixin:
@@ -12,6 +15,7 @@ class DbtLogParser(LoggingMixin):
     def __init__(self):
         super().__init__()
 
+        self._machine = get_machine(model=self)
         self.found_start = False
         self.found_start_summary = False
         self.found_finish = False
@@ -172,3 +176,10 @@ class DbtLogParser(LoggingMixin):
         self.metadata["tests"] = list(self.all_test_metadata.values())
         with open(outfile, "w") as f:
             json.dump(self.metadata, f)
+        self.log.info(f"Wrote results to {outfile}.")
+
+    @property
+    def is_done(self):
+        if hasattr(self, "state"):
+            return self.state == States.DONE
+        return False

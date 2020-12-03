@@ -2,7 +2,6 @@ import dataclasses
 import enum
 import typing as T
 
-from dbt_log_parser.model import DbtLogParser
 from transitions import Machine, State
 
 
@@ -26,26 +25,29 @@ class States(enum.Enum):
     DONE = 4
 
 
-def get_machine(model=None):
-    if model is None:
-        model = DbtLogParser()
-
+def get_machine(model):
     m = Machine(
         model=model,
         states=[
-            State(name=State.SEEK_START),
-            State(name=State.SEEK_START_SUMMARY),
-            State(name=State.SEEK_FINISH),
-            State(name=State.SEEK_DONE),
-            State(name=State.DONE),
+            State(name=States.SEEK_START),
+            State(name=States.SEEK_START_SUMMARY),
+            State(name=States.SEEK_FINISH),
+            State(name=States.SEEK_DONE),
+            State(name=States.DONE),
         ],
         initial=States.SEEK_START,
     )
 
     m.add_ordered_transitions(
         trigger="process_next_line",
-        conditions=["found_start", "found_summary", "found_finish", "found_done"],
-        before=["seek_start", "seek_summary", "seek_finish", "seek_done"],
+        conditions=[
+            lambda *args, **kwargs: True,
+            "found_start",
+            "found_start_summary",
+            "found_finish",
+            "found_done",
+        ],
+        prepare=[None, "seek_start", "seek_summary", "seek_finish", "seek_done"],
     )
 
     return m
