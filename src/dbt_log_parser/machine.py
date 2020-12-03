@@ -2,9 +2,8 @@ import dataclasses
 import enum
 import typing as T
 
-from transitions import Machine, State
-
 from dbt_log_parser.model import DbtLogParser
+from transitions import Machine, State
 
 
 @dataclasses.dataclass
@@ -46,6 +45,7 @@ def get_machine(model=None):
     m.add_ordered_transitions(
         trigger="process_next_line",
         conditions=["found_start", "found_summary", "found_finish", "found_done"],
+        before=["seek_start", "seek_summary", "seek_finish", "seek_done"],
     )
 
     return m
