@@ -7,11 +7,44 @@ Python package and CLI tool for parsing structured (JSON) data from a dbt log.
 
 ## Table of Contents
 
-* [Generated Report](#generated-report)
+* [Install](#install)
 * [Usage](#usage)
   + [CLI](#cli)
   + [API](#api)
+* [Generated Report](#generated-report)
 * [Contributing](#contributing)
+
+## Install
+
+```sh
+pip install dbt_log_parser
+```
+
+## Usage
+
+### CLI
+
+```sh
+$ dbtlp --help
+usage: dbtlp [-h] [--log-filepath LOG_FILEPATH] [--outfile OUTFILE]
+
+DBT log parser
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --log-filepath LOG_FILEPATH
+                        Path to dbt log to parse
+  --outfile OUTFILE     File to write JSON results to
+$ dbtlp --log-filepath dbt.log --outfile results.json
+```
+
+### API
+
+```python
+from dbt_log_parser import parse
+
+report = parse(log_filepath='dbt.log', write_report=False)
+```
 
 ## Generated Report
 
@@ -71,32 +104,6 @@ Example report structure:
 ```
 
 See more in the [JSON schema](./schemas/report.json).
-
-## Usage
-
-### CLI
-
-```sh
-$ dbtlp --help
-usage: dbtlp [-h] [--log-filepath LOG_FILEPATH] [--outfile OUTFILE]
-
-DBT log parser
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --log-filepath LOG_FILEPATH
-                        Path to dbt log to parse
-  --outfile OUTFILE     File to write JSON results to
-$ dbtlp --log-filepath dbt.log --outfile results.json
-```
-
-### API
-
-```python
-from dbt_log_parser import parse
-
-report = parse(log_filepath='dbt.log', write_report=False)
-```
 
 ## Contributing
 
