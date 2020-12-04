@@ -29,6 +29,7 @@ jobs:
 
       - name: test with pytest
         run: |
+          python setup.py develop
           pytest tests
 
   lint:
