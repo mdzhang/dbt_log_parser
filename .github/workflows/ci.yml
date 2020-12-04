@@ -31,7 +31,13 @@ jobs:
       - name: test with pytest
         run: |
           python setup.py develop
-          pytest tests
+          pytest --cov-report=xml --cov=src tests
+
+      - uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          verbose: true
 
   lint:
     runs-on: ubuntu-latest

@@ -238,6 +238,4 @@ class DbtLogParser(metaclass=LoggingMixin):
     @property
     def is_done(self):
         """Return true if we have encountered the end of a dbt log."""
-        if hasattr(self, "state"):
-            return self.state == States.DONE
-        return False
+        return self.state == States.DONE

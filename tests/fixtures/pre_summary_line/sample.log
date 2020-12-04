@@ -1,0 +1,4 @@
+Some garbage pre-start line
+Running with dbt=0.15.2
+I SHOULDN'T BE HERE
+Found 469 models, 1658 tests, 0 snapshots, 0 analyses, 300 macros, 0 operations, 0 seed files, 204 sources
