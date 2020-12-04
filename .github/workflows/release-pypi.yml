@@ -9,6 +9,7 @@ on:
     tags:
       - v*
 
+jobs:
   pypi-publish:
     name: Publish Python package
     runs-on: ubuntu-latest
