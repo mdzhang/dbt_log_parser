@@ -24,10 +24,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pipenv
           pipenv install --dev
+          pipenv run pip freeze > requirements.txt
+          pip install -r requirements.txt
 
       - name: test with pytest
         run: |
-          pipenv shell
           pytest tests
 
   lint:
@@ -50,6 +51,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pipenv
           pipenv install --dev
+          pipenv run pip freeze > requirements.txt
+          pip install -r requirements.txt
 
       - name: run pre-commit
         run: |
