@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -ex
+
+pip install -r docs/requirements.txt
+sphinx-build -a -b html -W docs/ docs/_build/
+open docs/_build/index.html
