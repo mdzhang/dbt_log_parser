@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o errexit
+set -ex
 
 command -v gh >/dev/null 2>&1 || die "gh is required but not installed. Aborting. See https://github.com/cli/cli"
 
@@ -54,16 +54,25 @@ fi
 # Git tag
 ######################################################################
 
-latesttag=$(git describe --tags --abbrev=0)
+# add $ so we don't look like we released 0.1.0 just b/c 0.1.0a1 is out
+alreadygittaggedlocally=$(git tag | { grep -e "$version$" -c || true ; })
 
-if [ ! "$latesttag" == "$version" ]; then
+if [[ $alreadygittaggedlocally -eq 1 ]]; then
+  echo "Git tag already existed locally. Not adding tag again."
+else
+  echo "Tagging locally..."
   # tag current commit
   git tag -a "$version" -m "$message"
+fi
 
-  # push tag to remote
-  git push origin --tags
+alreadygittaggedremotely=$(git ls-remote --tags --refs | { grep -e "$version$" -c || true ; })
+
+if [[ $alreadygittaggedremotely -eq 1 ]]; then
+  echo "Git tag already existed remotely. Not adding tag again."
 else
-  echo "Git tag already existed. Not adding tag again."
+  echo "Pushing tags..."
+  # push tag to remote
+  git push origin "refs/tags/$version"
 fi
 
 ######################################################################
@@ -77,11 +86,20 @@ else
 fi
 
 pypiversion=$(echo "$version" | cut -c 2-)
-alreadypypireleased=$(pip install dbt_log_parser== 2>&1 | grep -c "$pypiversion")
+echo "Seeing if pypi released..."
+alreadypypireleased=$(
+    pip install dbt_log_parser== 2>&1 \
+  | grep versions \
+  | awk '{ split($0,a,/versions:/); print a[2] }' \
+  | rev | cut -c 2- | rev \
+  | tr ',' '\n' | tr -d ' ' \
+  | { grep -e "$pypiversion$" -c || true ; }
+)
 
-if [ $alreadypypireleased -eq 1 ]; then
+if [[ $alreadypypireleased -eq 1 ]]; then
   echo "PyPi release already existed. Not recreating."
 else
+  echo "Creating PyPi release"
   rm -rf dist/
   python3 setup.py sdist bdist_wheel
   pip install twine
@@ -92,9 +110,9 @@ fi
 # GitHub release
 ######################################################################
 
-alreadygitreleased=$(gh release list | grep -c "$version")
+alreadygitreleased=$(gh release list | cut -d\$'\t' -f1 | { grep -e "$version" -c || true ; })
 
-if [ $alreadygitreleased -eq 1 ]; then
+if [[ $alreadygitreleased -eq 1 ]]; then
   echo "Github release already existed. Not recreating."
 else
   # split per-version docs into separate files named changes*
