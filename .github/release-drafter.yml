@@ -1,3 +1,4 @@
+---
 # Config for https://github.com/apps/release-drafter
 name-template: "$RESOLVED_VERSION 🦉 "
 tag-template: "$RESOLVED_VERSION"
@@ -24,6 +25,7 @@ categories:
       - "chore"
       - "build"
       - "ci"
+      - "docs"
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
 version-resolver:
   major:

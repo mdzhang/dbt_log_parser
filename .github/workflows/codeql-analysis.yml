@@ -1,5 +1,5 @@
 ---
-# Config for https://github.com/github/codeql-action
+# Used by https://github.com/github/codeql-action
 name: "CodeQL"
 
 on:

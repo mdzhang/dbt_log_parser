@@ -1,5 +1,5 @@
-# Config for https://github.com/mergeability/mergeable
 ---
+# Config for https://github.com/mergeability/mergeable
 version: 2
 mergeable:
   - when: pull_request.*, pull_request_review.*

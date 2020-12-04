@@ -1,4 +1,5 @@
 ---
+# Update docs at http://dbt_log_parser.readthedocs.io/
 name: ReadTheDocs release
 
 on:
