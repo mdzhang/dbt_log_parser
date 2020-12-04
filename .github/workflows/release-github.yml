@@ -1,0 +1,39 @@
+---
+# When new tags are pushed, publish release to GitHub
+name: GitHub release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  github-release:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # taken from https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+      - name: install gh cli
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: create release
+        env:
+          # provided by Actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # split per-version docs into separate files named changes*
+          csplit --prefix changes CHANGELOG.md "/^##.*/" '{*}'
+          tag=$(echo "${{ github.ref }}" | sed -e 's/^refs\/tags\///')
+
+          # find the current version's notes
+          releasenotesfile=$(find . -type f -iname "changes*" | xargs fgrep -l "$tag" | head -1)
+          cat $releasenotesfile
+
+          gh release create "$tag" -F "$releasenotesfile"

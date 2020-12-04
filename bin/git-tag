@@ -1,0 +1,55 @@
+#!/bin/bash
+
+set -ex
+
+usage()
+{
+    echo " Usage: ${0}
+
+    -v,               Version. Should follow pattern v{major}.{minor}.{patch}
+                        Alpha versions should end with e.g. a0, a1, a2, etc.
+                        Beta versions should end with e.g. b0, b1, b2, etc.
+    -m,               Short message to describe version
+
+    Tag the latest commit and push up to GitHub.
+    "
+}
+
+while getopts "v:m:h" opt; do
+    case $opt in
+        h) usage && exit 1
+        ;;
+        v) version=$OPTARG
+        ;;
+        m) message=$OPTARG
+        ;;
+        \?) echo "Invalid option -$OPTARG" >&2
+        ;;
+    esac
+done
+
+if [[ $(git diff --stat) != '' ]]; then
+  echo "Git branch is dirty. Can't release"
+  exit 1
+fi
+
+# add $ so we don't look like we released 0.1.0 just b/c 0.1.0a1 is out
+alreadygittaggedlocally=$(git tag | { grep -e "$version$" -c || true ; })
+
+if [[ $alreadygittaggedlocally -eq 1 ]]; then
+  echo "Git tag already existed locally. Not adding tag again."
+else
+  echo "Tagging locally..."
+  # tag current commit
+  git tag -a "$version" -m "$message"
+fi
+
+alreadygittaggedremotely=$(git ls-remote --tags --refs | { grep -e "$version$" -c || true ; })
+
+if [[ $alreadygittaggedremotely -eq 1 ]]; then
+  echo "Git tag already existed remotely. Not adding tag again."
+else
+  echo "Pushing tags..."
+  # push tag to remote
+  git push origin "refs/tags/$version"
+fi

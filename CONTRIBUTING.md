@@ -45,9 +45,8 @@ $ pytest tests
 
 - update `CHANGELOG.md`
 - commit using the title e.g. "[release] v0.1.0a0: Initial release"
-- ensure you have the [GitHub CLI](https://github.com/cli/cli) installed
-- ensure `$PYPI_USER` and `$PYPI_PASSWORD` environment variables are set
-- run `bin/release` e.g. `./bin/release -v v0.1.0a0 -m "Initial release"`
+- add git tags and push to remote e.g. `./bin/git-tag -v v0.1.1a0 -m "Testing GA release on tag create"`
+- let [GitHub actions](https://github.com/mdzhang/dbt_log_parser/actions?query=workflow%3A%22PyPi+Release%22) take it from there
 
 ## Hygiene
 
@@ -56,6 +55,8 @@ Abide by the `pre-commit` hook:
 ```sh
 $ pre-commit install
 ```
+
+Enforced by CI checks.
 
 ## Reporting Bugs
 

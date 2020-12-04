@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -ex
+
+usage()
+{
+    echo " Usage: ${0}
+
+    -v,               Version. Should follow pattern v{major}.{minor}.{patch}
+                        Alpha versions should end with e.g. a0, a1, a2, etc.
+                        Beta versions should end with e.g. b0, b1, b2, etc.
+
+    Remove the latest tag
+    "
+}
+
+while getopts "v:m:h" opt; do
+    case $opt in
+        h) usage && exit 1
+        ;;
+        v) version=$OPTARG
+        ;;
+        \?) echo "Invalid option -$OPTARG" >&2
+        ;;
+    esac
+done
+
+git tag -d "$version"
+git push --delete origin "$version"

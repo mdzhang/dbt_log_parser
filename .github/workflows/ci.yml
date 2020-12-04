@@ -1,5 +1,6 @@
 ---
-name: CI Build
+# Run lint and unit test checks on all pushes
+name: CI Tests
 
 on: [push]
 
