@@ -30,7 +30,7 @@ jobs:
         run: |
           # split per-version docs into separate files named changes*
           csplit --prefix changes CHANGELOG.md "/^##.*/" '{*}'
-          tag=$(echo "${{ github.ref }}" | sed -e 's/^ref\/tags\///')
+          tag=$(echo "${{ github.ref }}" | sed -e 's/^refs\/tags\///')
 
           # find the current version's notes
           releasenotesfile=$(find . -type f -iname "changes*" | xargs fgrep -l "$tag" | head -1)
