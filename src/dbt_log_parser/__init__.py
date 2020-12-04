@@ -9,17 +9,27 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def parse(
-    log_filepath: str = "dbt.log", outfile: str = "out.json", write_report: bool = True
+    log_filepath: str = None,
+    outfile: str = None,
+    write_report: bool = True,
+    log_string: str = None,
 ) -> T.Dict:
     """Parse the dbt log at the given path and generate a report.
 
     :param log_filepath: Where dbt log exists on disk
     :param outfile: Where to write JSON report to
+    :param log_string: String of dbt log text, if not using `log_filepath`
     :param write_report: Whether to write JSON report to disk at all
     :return: Report as dict
     """
-    with open(log_filepath, "r") as f:
-        log_lines = f.readlines()
+    if log_filepath is None and log_string is None:
+        raise ValueError("One of log_filepath or log_string must be provided")
+
+    if log_filepath is not None:
+        with open(log_filepath, "r") as f:
+            log_lines = f.readlines()
+    elif log_string is not None:
+        log_lines = log_string.split("\n")
 
     parser = DbtLogParser()
 
