@@ -1,56 +1,56 @@
 {
-  "models_found": 469,
-  "tests_found": 1658,
-  "snapshots_found": 0,
   "analyses_found": 0,
   "macros_found": 300,
+  "models_found": 469,
   "operations_found": 0,
   "seeds_found": 0,
+  "snapshots_found": 0,
   "sources_found": 204,
-  "tests_run": 1100,
-  "tests_runtime_seconds": 97.47,
   "tests": [
     {
-      "number": 1,
       "name": "accepted_values_dim_cur_bronto_contact_bronto_status__active__onboarding__transactional__bounce__unconfirmed__unsub",
+      "number": 1,
       "status": "PASS",
       "total_time": 2.11
     },
     {
-      "number": 12,
       "name": "is_gte_zero_fact_item_promo_slot_purchases_cost",
+      "number": 12,
       "status": "PASS",
       "total_time": 2.08
     },
     {
-      "status": "WARN",
-      "number": 5,
       "name": "is_gte_zero_dim_school_access_subscriptions_subscription_term_length",
-      "total_time": 2.32,
-      "query_results": {
-        "found": 5,
-        "expected": 0
-      },
+      "number": 5,
       "query": {
+        "file_err": true,
         "filepath": "target/compiled/core/schema_test/is_gte_zero_dim_school_access_subscriptions_subscription_term_length.sql",
-        "sql": null,
-        "file_err": true
-      }
+        "sql": null
+      },
+      "query_results": {
+        "expected": 0,
+        "found": 5
+      },
+      "status": "WARN",
+      "total_time": 2.32
     },
     {
-      "status": "FAIL",
-      "number": 548326,
       "name": "unique_int_home_page_display_resources_you_may_like_event_user_id",
-      "total_time": 1.16,
-      "query_results": {
-        "found": 548326,
-        "expected": 0
-      },
+      "number": 548326,
       "query": {
+        "file_err": true,
         "filepath": "target/compiled/core/schema_test/unique_int_home_page_display_resources_you_may_like_event_user_id.sql",
-        "sql": null,
-        "file_err": true
-      }
+        "sql": null
+      },
+      "query_results": {
+        "expected": 0,
+        "found": 548326
+      },
+      "status": "FAIL",
+      "total_time": 1.16
     }
-  ]
+  ],
+  "tests_found": 1658,
+  "tests_run": 1100,
+  "tests_runtime_seconds": 97.47
 }
