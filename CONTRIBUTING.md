@@ -12,11 +12,11 @@ The `DbtLogParser` maintains internal state that is used to eventually generate 
 
 ## Where to start
 
-See the [`main` function here](./src/dbt_log_parser/__init__.py).
+See the [main function here](./src/dbt_log_parser/__init__.py).
 
 ## Also Useful
 
-The `DbtLogParser` heavily uses, or expects to be used by, the state machine class from [`pytransitions`](https://github.com/pytransitions/transitions), so reading the Quick Start on that package is advised.
+The `DbtLogParser` heavily uses, or expects to be used by, the state machine class from [pytransitions](https://github.com/pytransitions/transitions), so reading the Quick Start on that package is advised.
 
 ## Setup
 
