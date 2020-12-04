@@ -1,6 +1,5 @@
 import argparse
 import logging
-import os
 import typing as T
 
 from dbt_log_parser.parser import DbtLogParser
@@ -19,17 +18,18 @@ def parse(
     :param log_filepath: Where dbt log exists on disk
     :param outfile: Where to write JSON report to
     :param log_string: String of dbt log text, if not using `log_filepath`
+        Takes precedence over log_filepath.
     :param write_report: Whether to write JSON report to disk at all
     :return: Report as dict
     """
     if log_filepath is None and log_string is None:
         raise ValueError("One of log_filepath or log_string must be provided")
 
-    if log_filepath is not None:
+    if log_string is not None:
+        log_lines = log_string.split("\n")
+    elif log_filepath is not None:
         with open(log_filepath, "r") as f:
             log_lines = f.readlines()
-    elif log_string is not None:
-        log_lines = log_string.split("\n")
 
     parser = DbtLogParser()
 
@@ -51,11 +51,15 @@ def get_parser():
     parser = argparse.ArgumentParser(description="DBT log parser")
 
     args = {
-        "log_filepath": dict(
-            flag="--log-filepath", help="Path to dbt log to parse", default="dbt.log"
-        ),
+        "log_filepath": dict(flag="--log-filepath", help="Path to dbt log to parse"),
         "outfile": dict(
             flag="--outfile", help="File to write JSON results to", default="out.json"
+        ),
+        "log_string": dict(
+            flag="--log-string",
+            help=(
+                "dbt log to parse as string. " "Takes precedence over --log-filepath. "
+            ),
         ),
     }
 
@@ -71,7 +75,9 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    parse(args.log_filepath, args.outfile)
+    parse(
+        log_filepath=args.log_filepath, outfile=args.outfile, log_string=args.log_string
+    )
 
 
 if __name__ == "__main__":
