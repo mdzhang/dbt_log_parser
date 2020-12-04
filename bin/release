@@ -18,6 +18,8 @@ usage()
     "
 }
 
+# push test instead of prod pypi release
+# NB: does not affect git tags or github release
 testrelease=1
 
 while getopts "v:m:t:h" opt; do
@@ -87,6 +89,8 @@ fi
 
 pypiversion=$(echo "$version" | cut -c 2-)
 echo "Seeing if pypi released..."
+# TODO: this will search production pypi for existing package
+#       so may fail if attempting to re-push a published test pypi package
 alreadypypireleased=$(
     pip install dbt_log_parser== 2>&1 \
   | grep versions \
@@ -110,7 +114,7 @@ fi
 # GitHub release
 ######################################################################
 
-alreadygitreleased=$(gh release list | cut -d\$'\t' -f1 | { grep -e "$version" -c || true ; })
+alreadygitreleased=$(gh release list | cut -d\$'\t' -f1 | { grep -e "$version$" -c || true ; })
 
 if [[ $alreadygitreleased -eq 1 ]]; then
   echo "Github release already existed. Not recreating."
@@ -124,5 +128,5 @@ else
   gh release create "$version" -F "$releasenotesfile"
 
   # cleanup split files
-  rm -f "changes*"
+  find . -type f -iname "changes*" -exec rm {} \;
 fi
