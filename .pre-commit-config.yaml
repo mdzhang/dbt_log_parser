@@ -10,6 +10,7 @@ repos:
       - id: check-json
       - id: pretty-format-json
         exclude: Pipfile.lock
+        args: ["--autofix"]
       - id: check-yaml
       - id: detect-private-key
       - id: detect-aws-credentials
