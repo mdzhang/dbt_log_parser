@@ -45,9 +45,8 @@ $ pytest tests
 
 - update `CHANGELOG.md`
 - commit using the title e.g. "[release] v0.1.0a0: Initial release"
-- ensure you have the [GitHub CLI](https://github.com/cli/cli) installed
-- ensure `$PYPI_USER` and `$PYPI_PASSWORD` environment variables are set
-- run `bin/release` e.g. `./bin/release -v v0.1.0a0 -m "Initial release"`
+- run `./bin/git-tag`
+- let GitHub actions take it from there; see [.github/workflows/release-github.yml](.github/workflows/release-github.yml)
 
 ## Hygiene
 
@@ -56,6 +55,8 @@ Abide by the `pre-commit` hook:
 ```sh
 $ pre-commit install
 ```
+
+Enforced by CI checks.
 
 ## Reporting Bugs
 
