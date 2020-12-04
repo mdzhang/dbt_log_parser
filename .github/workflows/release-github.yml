@@ -33,5 +33,6 @@ jobs:
 
           # find the current version's notes
           releasenotesfile=$(find . -type f -iname "changes*" | xargs fgrep -l "${{ github.ref }}" | head -1)
+          cat $releasenotesfile
 
           gh release create "${{ github.ref }}" -F "$releasenotesfile"
