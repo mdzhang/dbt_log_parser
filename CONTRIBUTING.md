@@ -45,7 +45,7 @@ $ pytest tests
 
 - update `CHANGELOG.md`
 - commit using the title e.g. "[release] v0.1.0a0: Initial release"
-- run `./bin/git-tag`
+- add git tags and push to remote e.g. `./bin/git-tag -v v0.1.1a0 -m "Testing GA release on tag create"`
 - let GitHub actions take it from there; see [.github/workflows/release-github.yml](.github/workflows/release-github.yml)
 
 ## Hygiene
