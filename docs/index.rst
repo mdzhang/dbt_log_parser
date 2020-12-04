@@ -17,7 +17,7 @@ Contents
    install_and_usage
    contributing
    change_log
-   license
+   License <license>
 
 
 Indices and tables
