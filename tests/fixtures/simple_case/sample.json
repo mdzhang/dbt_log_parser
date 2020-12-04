@@ -52,5 +52,9 @@
   ],
   "tests_found": 1658,
   "tests_run": 1100,
-  "tests_runtime_seconds": 97.47
+  "tests_runtime_seconds": 97.47,
+  "total_errors": "3",
+  "total_passed": "1083",
+  "total_skipped": "0",
+  "total_warnings": "14"
 }

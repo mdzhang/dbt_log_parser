@@ -1,3 +1,4 @@
+Some garbage pre-start line
 Running with dbt=0.15.2
 Found 469 models, 1658 tests, 0 snapshots, 0 analyses, 300 macros, 0 operations, 0 seed files, 204 sources
 19:02:13 | Concurrency: 30 threads (target='prod')
@@ -20,3 +21,4 @@ Found 469 models, 1658 tests, 0 snapshots, 0 analyses, 300 macros, 0 operations,
   Got 5 results, expected 0.
 
   compiled SQL at target/compiled/core/schema_test/is_gte_zero_dim_school_access_subscriptions_subscription_term_length.sql
+Done. PASS=1083 WARN=3 ERROR=14 SKIP=0 TOTAL=1100

@@ -10,7 +10,7 @@ def test_sample_log():
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     log_filepath = os.path.join(cur_dir, "./fixtures/simple_case/sample.log")
 
-    actual_report = parse(log_filepath=log_filepath, write_report=False)
+    actual_report = parse(log_filepath=log_filepath, write_report=True)
 
     report_path = os.path.join(cur_dir, "./fixtures/simple_case/sample.json")
     with open(report_path, "r") as f:
