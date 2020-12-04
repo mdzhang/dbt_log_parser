@@ -30,9 +30,10 @@ jobs:
         run: |
           # split per-version docs into separate files named changes*
           csplit --prefix changes CHANGELOG.md "/^##.*/" '{*}'
+          tag=$(echo "${{ github.ref }}" | sed -e 's/^ref\/tags\///')
 
           # find the current version's notes
-          releasenotesfile=$(find . -type f -iname "changes*" | xargs fgrep -l "${{ github.ref }}" | head -1)
+          releasenotesfile=$(find . -type f -iname "changes*" | xargs fgrep -l "$tag" | head -1)
           cat $releasenotesfile
 
-          gh release create "${{ github.ref }}" -F "$releasenotesfile"
+          gh release create "$tag" -F "$releasenotesfile"
