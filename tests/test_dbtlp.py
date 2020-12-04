@@ -66,3 +66,11 @@ def test_parse_string():
         expected_report = json.load(f)
 
     assert expected_report == actual_report
+
+
+def test_no_log_source():
+    """If neither a log file or string is provided, parse should fail."""
+    with pytest.raises(ValueError) as excinfo:
+        parse()
+
+    assert "One of log_filepath or log_string must be provided" in str(excinfo.value)
