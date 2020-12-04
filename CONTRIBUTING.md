@@ -46,7 +46,7 @@ $ pytest tests
 - update `CHANGELOG.md`
 - commit using the title e.g. "[release] v0.1.0a0: Initial release"
 - add git tags and push to remote e.g. `./bin/git-tag -v v0.1.1a0 -m "Testing GA release on tag create"`
-- let GitHub actions take it from there; see [.github/workflows/release-github.yml](.github/workflows/release-github.yml)
+- let [GitHub actions](https://github.com/mdzhang/dbt_log_parser/actions?query=workflow%3A%22PyPi+Release%22) take it from there
 
 ## Hygiene
 
