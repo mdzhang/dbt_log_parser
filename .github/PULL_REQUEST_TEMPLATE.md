@@ -5,7 +5,7 @@
 ## Checklist
 
 - [ ] GitHub issue code is in my PR title, branch name, and linked to from my PR description
-- [ ] PR title starts with one of '[feature] ', '[bugfix] ', '[ci] ', '[chore] ', or '[docs] '
+- [ ] PR title starts with one of '[feature] ', '[bugfix] ', '[ci] ', '[chore] ', '[release] ', or '[docs] '
 - [ ] If I have fixed a bug or added a new feature I have updated the CHANGELOG
 - [ ] I've added adequate documentation
 - [ ] I've added adequate unit tests

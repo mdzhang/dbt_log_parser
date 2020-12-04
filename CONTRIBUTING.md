@@ -44,8 +44,8 @@ $ pytest tests
 ## Releasing
 
 - update `CHANGELOG.md`; add entry for new version; re-use [draft release](https://github.com/mdzhang/dbt_log_parser/releases)
-- commit using the title e.g. `git commit -m "[release] v0.1.0: Initial release"`
-- create PR, get it approved, and merge into `main`
+- commit changes
+- create PR with title e.g. `git commit -m "[release]: v0.1.0: Initial release"`, get it approved, and merge into `main`
 - checkout `main` and ensure the latest commit is the PR's squash commit
 - add git tags and push to remote e.g. `./bin/git-tag -v v0.1.1 -m "Initial release"`
 - let [GitHub actions](https://github.com/mdzhang/dbt_log_parser/actions?query=workflow%3A%22PyPi+Release%22) take it from there
