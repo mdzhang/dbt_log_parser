@@ -13,7 +13,7 @@ mergeable:
       # enforce naming convention
       - do: title
         must_include:
-          regex: ^\[(feature|ci|docs|bugfix)\]:.+$
+          regex: ^\[(feature|ci|docs|bugfix|chore)\]:.+$
           message: pull request titles must be named e.g. "[feature]:<summary>; closes #1"
 
       # if the PR is a new feature or a fix, it must be logged in the changelog
