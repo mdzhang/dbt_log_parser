@@ -1,13 +1,36 @@
+import argparse
 import json
 import os
+from unittest import mock
 
 import pytest
 from jsonschema import validate
 
-from dbt_log_parser import parse
+from dbt_log_parser import main, parse
 from dbt_log_parser.parser import DbtLogParser
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
+log_filepath = os.path.join(cur_dir, "./fixtures/simple_case/sample.log")
+outfile = os.path.join(cur_dir, "test_parse_args.json")
+
+
+@mock.patch(
+    "argparse.ArgumentParser.parse_args",
+    return_value=argparse.Namespace(
+        log_filepath=log_filepath, outfile=outfile, log_string=None
+    ),
+)
+def test_parse_args(mock_args):
+    main()
+
+    report_path = os.path.join(cur_dir, "./fixtures/simple_case/sample.json")
+    with open(report_path, "r") as f:
+        expected_report = json.load(f)
+
+    with open(outfile, "r") as f:
+        actual_report = json.load(f)
+
+    assert expected_report == actual_report
 
 
 def test_sample_log():

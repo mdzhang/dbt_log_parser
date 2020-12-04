@@ -147,5 +147,5 @@ dmypy.json
 
 *.json
 !schemas/*.json
-!tests/**/*.json
-!tests/**/*.log
+!tests/fixtures/**/*.json
+!tests/fixtures/**/*.log
