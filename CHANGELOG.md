@@ -13,10 +13,6 @@
 - [ci]: Add release pipeline using GitHub Actions; closes #6 (#7) @mdzhang
 - [ci]: Add CI test pipeline; closes #2 (#3) @mdzhang
 
-## v0.1.1a0
-
-* Testing GitHub Actions for tag-triggered releases
-
 ## v0.1.0
 
 * Initial non-alpha release, now that project has improved tests and
