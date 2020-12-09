@@ -11,6 +11,3 @@ pre-commit = "*"
 
 [packages]
 transitions = "*"
-
-[requires]
-python_version = "3.8"
