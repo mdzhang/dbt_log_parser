@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.2.1
+
+### 🐛 Bug Fixes
+
+- [bugfix]: import fails on <3.7 b/c of dataclasses dep; closes #18 (#19) @mdzhang
+
 ## v0.2.0
 
 ### 🚀 New Features and Enhancements
