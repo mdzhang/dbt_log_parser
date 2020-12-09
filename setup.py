@@ -38,8 +38,8 @@ setup(
     zip_safe=True,
     install_requires=[
         "transitions>=0.8.5",
+        "dataclasses ; python_version<'3.7'",
     ],
-    extras_require={},
     test_suite="tests",
     classifiers=[
         "Development Status :: 1 - Planning",
